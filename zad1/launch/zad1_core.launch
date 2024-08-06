@@ -1,0 +1,7 @@
+<launch>
+    <!-- robot control node -->
+    <node pkg="zad1" type="zad1_robot" name="robot_node"/>
+    <!-- forward kinematics node -->
+    <node pkg="zad1" type="zad1_forward_kinematics" name="geometry_node"/>
+    <include file="$(find rrm_simple_robot_model)/launch/robot_state_publisher.launch" />
+</launch>

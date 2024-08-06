@@ -1,0 +1,76 @@
+/*
+    Eigen::VectorXd toolorigin(4);
+    toolorigin << 0, 0, 0, 1;
+
+    double l0 = 0;
+    double l1 = 0;
+    double l2 = 0.203;
+    double l3 = 0.203;
+    double l4 = 0.05;
+    double l5 = 0.15;
+
+    Eigen::MatrixXd tToJ1 = translationMatrix('z', l0) * rotationMatrix('z', positions[0]);
+    Eigen::MatrixXd tToJ2 = tToJ1 * translationMatrix('z', l1) * rotationMatrix('y', positions[1]);
+    Eigen::MatrixXd tToJ3 = tToJ1 * tToJ2 * translationMatrix('z', l2) * rotationMatrix('y', positions[2]);
+
+    Eigen::MatrixXd tToJ4 = tToJ1 * tToJ2 * tToJ3 * translationMatrix('z', l3) * rotationMatrix('z', positions[3]);
+    Eigen::MatrixXd tToJ5 = tToJ1 * tToJ2 * tToJ3 * tToJ4 * translationMatrix('z', l4) * rotationMatrix('y', positions[4]);
+    Eigen::MatrixXd tToJ6 = tToJ1 * tToJ2 * tToJ3 * tToJ4 * tToJ5 * translationMatrix('z', l5) * translationMatrix('z', positions[5]);
+
+    Eigen::VectorXd tool = tToJ6 * toolorigin;*/
+
+
+        Eigen::MatrixXd tToJ1 = translationMatrix('z', l0) * rotationMatrix('z', positions[0]) *
+                                translationMatrix('z', l1) * rotationMatrix('y', positions[1]) *
+                                translationMatrix('z', l2) * rotationMatrix('y', positions[2]) *
+                                translationMatrix('z', l3) * rotationMatrix('z', positions[3]) *
+                                translationMatrix('z', l4) * rotationMatrix('y', positions[4]) *
+                                translationMatrix('z', l5) * translationMatrix('z', positions[5]);
+
+
+
+
+        Eigen::MatrixXd tToJ2 = tToJ1 * translationMatrix('z', l0) * rotationMatrix('y', positions[0]);
+        Eigen::MatrixXd tToJ2 = tToJ1 * translationMatrix('z', l1) * rotationMatrix('y', positions[1]);
+        Eigen::MatrixXd tToJ3 = tToJ1 * tToJ2 * translationMatrix('z', l2) * rotationMatrix('y', positions[2]);
+
+        Eigen::MatrixXd tToJ4 = tToJ1 * tToJ2 * tToJ3 * translationMatrix('z', l3) * rotationMatrix('z', positions[3]);
+        Eigen::MatrixXd tToJ5 = tToJ1 * tToJ2 * tToJ3 * tToJ4 * translationMatrix('z', l4) * rotationMatrix('y', positions[4]);
+        Eigen::MatrixXd tToJ6 = tToJ1 * tToJ2 * tToJ3 * tToJ4 * tToJ5 * translationMatrix('z', l5) * translationMatrix('z', positions[5]);
+
+
+
+
+        geometry_msgs::Pose geomsg;
+        geomsg.position.x = tool.x();
+        geomsg.position.y = tool.y();
+        geomsg.position.z = tool.z();
+        publisher_thread_.publish(geomsg);
+
+
+
+            Eigen::Affine3d e_pose(matrix);
+            geometry_msgs::Pose pose;
+            tf::poseEigenToMsg (e_pose, pose);
+
+
+
+
+
+
+                Eigen::Vector4d tool = tToJ6 * toolorigin;
+
+                Eigen::Quaterniond quaternion(tToJ6.block<3,3>(0,0));
+                Eigen::Vector3d translation(tToJ6.block<3,1>(0,3));
+
+                geometry_msgs::Pose pose;
+                pose.position.x = tool.x();
+                pose.position.y = tool.y();
+                pose.position.z = tool.z();
+
+                pose.orientation.x = quaternion.x();
+                pose.orientation.y = quaternion.y();
+                pose.orientation.z = quaternion.z();
+                pose.orientation.w = quaternion.w();
+                publisher.publish(pose);
+                mutex.unlock();

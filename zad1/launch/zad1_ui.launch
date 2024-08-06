@@ -1,0 +1,5 @@
+<launch>
+    <include file="$(find zad1)/launch/zad1_core.launch" />
+    <!-- launch-prefix='gnome-terminal' spusti node pod novym terminal oknom platne len pre systemy s gnome terminalom -->
+    <node pkg="zad1" type="zad1_client_gui" name="client_gui_node" output="screen" launch-prefix="gnome-terminal --" />
+</launch>
